@@ -595,7 +595,7 @@ async function getAppStateToLogin(loginWithEmail) {
                 catch (err) {
                         spin._stop();
                         log.err("LOGIN FACEBOOK", getText('login', 'loginError'), err.message, err);
-                        process.exit();
+                        process.exit(2);
                 }
         }
         return appState;
@@ -1079,17 +1079,17 @@ async function startBot(loginWithEmail) {
                         catch (e) {
                                 console.log(e);
                                 log.err('GBAN', getText('login', 'checkGbanError'));
-                                process.exit();
+                                process.exit(2);
                         }
                         // ———————————————— NOTIFICATIONS ———————————————— //
                         let notification;
                         try {
-                                const getNoti = await axios.get("https://raw.githubusercontent.com/noobcore404/NC-GBAN/refs/heads/main/notification.txt");
+                                const getNoti = await axios.get("https://raw.githubusercontent.com/noobcore404/NC-GBAN/refs/heads/main/notification.txt", { timeout: 8000 });
                                 notification = getNoti.data;
                         }
                         catch (err) {
-                                log.err("ERROR", "Can't get notifications data");
-                                process.exit();
+                                log.warn("ERROR", "Can't get notifications data — continuing without it (network issue or server unavailable)");
+                                notification = "";
                         }
                         if (global.BeatriceBC.ncsetting.autoRefreshFbstate == true) {
                                 changeFbStateByCode = true;
