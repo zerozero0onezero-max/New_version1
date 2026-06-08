@@ -81,9 +81,6 @@
     "url": "https://github.com/ntkhang03/Goat-Bot-V2/issues"
   },
   "homepage": "https://github.com/ntkhang03/Goat-Bot-V2#readme",
-  "overrides": {
-    "form-data": "^4.0.0"
-  },
   "devDependencies": {
     "@types/node": "^20.19.34",
     "eslint": "^8.2.0",

@@ -9,23 +9,7 @@ const fileState = new Map();
 const uploadQueue = new Map();
 
 let autoPushInterval = null;
-let isRunning = false;
-
-// ── Crash-loop guard ────────────────────────────────────────────────────────
-// If the bot crashes more than MAX_CRASHES times within CRASH_WINDOW_MS it
-// waits CRASH_COOLDOWN_MS before the next restart so it never spiral-loops.
-const MAX_CRASHES     = 5;
-const CRASH_WINDOW_MS = 60 * 1000;      // 1 minute
-const CRASH_COOLDOWN_MS = 30 * 1000;    // 30 seconds cool-down
-const crashTimes = [];
-
-function shouldCoolDown() {
-  const now = Date.now();
-  while (crashTimes.length && now - crashTimes[0] > CRASH_WINDOW_MS)
-    crashTimes.shift();
-  crashTimes.push(now);
-  return crashTimes.length > MAX_CRASHES;
-}
+let isRunning = false; // 🔒 prevent overlap
 
 async function runAutoPush() {
   if (isRunning) {
@@ -79,31 +63,16 @@ function startProject() {
   });
 
   child.on("close", (code) => {
-    // exit code 0 with a config/fatal error means "don't restart" only when
-    // it was an explicit user-action error (invalid JSON, etc.).
-    // For every other exit — including 0 from transient network errors — we
-    // restart so the bot recovers automatically on any hosting.
-    if (code === 0) {
-      log.warn(`⚠️ Bot exited cleanly (code 0). Restarting in 5s to recover from transient errors...`);
-      setTimeout(startProject, 5000);
-      return;
-    }
-
     if (code === 2) {
-      log.info("🔄 Restarting Bot (requested by process)...");
+      log.info("🔄 Restarting Project...");
       startProject();
-      return;
+    } else {
+      log.warn(`⚠️ Project exited with code ${code}`);
     }
-
-    // Any other code (1, SIGTERM, etc.) — restart with crash-loop guard
-    const delay = shouldCoolDown() ? CRASH_COOLDOWN_MS : 3000;
-    log.warn(`⚠️ Bot exited with code ${code}. Restarting in ${delay / 1000}s...`);
-    setTimeout(startProject, delay);
   });
 
   child.on("error", (err) => {
     log.error("❌ Failed to start project:", err.message);
-    setTimeout(startProject, 5000);
   });
 }
 
