@@ -67,12 +67,17 @@ function validJSON(pathDir) {
         try {
                 if (!fs.existsSync(pathDir))
                         throw new Error(`File "${pathDir}" not found`);
-                execSync(`npx jsonlint "${pathDir}"`, { stdio: 'pipe' });
+                const content = fs.readFileSync(pathDir, "utf8");
+                try {
+                        JSON.parse(content);
+                } catch (parseErr) {
+                        throw new Error(parseErr.message);
+                }
                 return true;
         }
         catch (err) {
                 let msgError = err.message;
-                msgError = msgError.split("\n").slice(1).join("\n");
+                msgError = msgError.split("\n").slice(0).join("\n");
                 const indexPos = msgError.indexOf("    at");
                 msgError = msgError.slice(0, indexPos != -1 ? indexPos - 1 : msgError.length);
                 throw new Error(msgError);
