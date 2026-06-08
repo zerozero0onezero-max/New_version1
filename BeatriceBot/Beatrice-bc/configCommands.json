@@ -1,0 +1,59 @@
+{
+  "commandBanned": {},
+  "envGlobal": {
+    "weatherApiKey": "d7e795ae6a0d44aaa8abb1a0a7ac19e4",
+    "goatbotApikey": ""
+  },
+  "envCommands": {
+    "daily": {
+      "rewardFirstDay": {
+        "coin": 1500,
+        "exp": 450
+      },
+      "weeklyBonus": {
+        "coin": 3500,
+        "exp": 630
+      },
+      "maxStreakBonus": 2,
+      "timezone": "Asia/Ho_Chi_Minh"
+    },
+    "notification": {
+      "delayPerGroup": 250,
+      "maxRetries": 2,
+      "batchSize": 10
+    },
+    "rank": {
+      "deltaNext": 5,
+      "maxLevel": 100,
+      "xpPerMessage": 1
+    },
+    "rankup": {
+      "deltaNext": 5
+    },
+    "appstore": {
+      "limitResult": 3
+    },
+    "botnick": {
+      "delayPerGroup": 250
+    },
+    "dhbc": {
+      "reward": 1000
+    },
+    "botnickname": {
+      "delayPerGroup": 300
+    },
+    "count": {
+      "ACCESS_TOKEN": "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662"
+    }
+  },
+  "envEvents": {
+    "logsbot": {
+      "allow": true
+    }
+  },
+  "commandUnload": [
+    "gpt5.js",
+    "info.js",
+    "bro.js"
+  ]
+}

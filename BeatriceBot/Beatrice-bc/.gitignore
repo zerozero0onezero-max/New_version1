@@ -1,0 +1,81 @@
+# ======================
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# ======================
+# Replit / runtime junk
+.local/
+.cache/
+.replit
+.upm/
+.config/
+attached_assets
+.eslintrc.json
+
+# ======================
+# Build / obfuscatattached_assetsion tools
+fb-chat-api.dev
+obfcode.js
+minify.js
+backupOrigin.js
+createVersion.js
+createVersionAndCommit.js
+checkOriginCodeChanged.js
+
+# ======================
+# Archives
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# ======================
+# Dev / test files
+*.dev.*
+*test.*
+*.test.*
+test.js
+
+# ======================
+# Database
+database/data/*
+!database/data/.gitkeep
+
+# ======================
+# Scripts temp
+scripts/cmds/tmp/*
+!scripts/cmds/tmp/.gitkeep
+
+scripts/events/tmp/*
+!scripts/events/tmp/.gitkeep
+
+# ======================
+# Attachments (heavy files)
+scripts/events/data/leaveAttachment/
+scripts/events/data/welcomeAttachment/
+scripts/cmds/assets/guide/
+
+# ======================
+# Env
+.env
+.env.*
+!.env.example
+
+# ======================
+# OS junk
+.DS_Store
+Thumbs.db
+
+# ======================
+# Logs
+logs/
+*.log
+
+# ======================
+# Temp
+tmp/
+temp/

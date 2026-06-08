@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beatrice bc Bot Status</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f0f17;color:#e2e2e8;min-height:100vh;padding:20px;display:flex;justify-content:center;align-items:flex-start}
+.wrapper{width:100%;max-width:600px;padding:10px 0}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.header h1{font-size:20px;font-weight:700;color:#fff}
+.online-badge{display:flex;align-items:center;gap:6px;background:#1a2b1a;border:1px solid #2d4a2d;border-radius:20px;padding:4px 12px;font-size:13px;color:#4ade80;font-weight:500}
+.dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.stat-card{background:#1a1a27;border:1px solid #2a2a3e;border-radius:14px;padding:14px 12px;text-align:center}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#6b6b8a;font-weight:500;margin-bottom:6px}
+.stat-val{font-size:22px;font-weight:700;color:#fff}
+.stat-unit{font-size:11px;color:#6b6b8a;margin-left:2px}
+.about-box{background:#1a1a27;border:1px solid #2a2a3e;border-radius:14px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#9090a8;text-align:center;line-height:1.5}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.info-row{background:#1a1a27;border:1px solid #2a2a3e;border-radius:14px;padding:12px 16px;display:flex;flex-direction:column;gap:4px}
+.info-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#6b6b8a;font-weight:500}
+.info-val{font-size:15px;font-weight:600;color:#e2e2e8}
+.info-val.uid{color:#22d3ee;font-size:13px;font-family:monospace}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.feature-card{background:#1a1a27;border:1px solid #2a2a3e;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.feat-name{font-size:13px;font-weight:500;color:#c4c4d4}
+.badge{border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge.on-green{background:#14532d;color:#4ade80;border:1px solid #166534}
+.badge.on-blue{background:#0f3254;color:#38bdf8;border:1px solid #0369a1}
+.badge.off-red{background:#3b0a0a;color:#f87171;border:1px solid #7f1d1d}
+.footer{text-align:center;font-size:12px;color:#4a4a6a;padding-top:10px}
+@media(max-width:420px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .two-col,.features{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>🚀 Beatrice bc Bot Status</h1>
+    <div class="online-badge" id="statusBadge"><div class="dot"></div><span id="statusText">online</span></div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Uptime</div><div class="stat-val" id="uptime">—</div></div>
+    <div class="stat-card"><div class="stat-label">Commands</div><div class="stat-val"><span id="cmds">—</span><span class="stat-unit">cmds</span></div></div>
+    <div class="stat-card"><div class="stat-label">Threads</div><div class="stat-val" id="threads">—</div></div>
+    <div class="stat-card"><div class="stat-label">Users</div><div class="stat-val" id="users">—</div></div>
+  </div>
+
+  <div class="about-box">
+    Beatrice bc is a powerful and lightweight Facebook bot designed for stability, multi-appstate support and 24/7 uptime.
+  </div>
+
+  <div class="two-col">
+    <div class="info-row"><div class="info-lbl">Prefix</div><div class="info-val" id="prefix">—</div></div>
+    <div class="info-row"><div class="info-lbl">Bot Identity</div><div class="info-val" id="botName">—</div></div>
+    <div class="info-row"><div class="info-lbl">Running Bot ID</div><div class="info-val uid" id="uid">—</div></div>
+    <div class="info-row"><div class="info-lbl">Node version</div><div class="info-val" id="nodeVer">—</div></div>
+    <div class="info-row"><div class="info-lbl">Language</div><div class="info-val" id="lang">—</div></div>
+    <div class="info-row"><div class="info-lbl">RAM Usage</div><div class="info-val" id="ram">—</div></div>
+  </div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feat-name">Beatrice (AI persona)</div>
+      <div class="badge on-green" id="babyBadge">active</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-name">Reply delay</div>
+      <div class="badge on-blue" id="delayBadge">on</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-name">Auto-delete own messages</div>
+      <div class="badge off-red" id="deleteBadge">off</div>
+    </div>
+    <div class="feature-card">
+      <div class="feat-name">Hybrid Reactions</div>
+      <div class="badge on-green" id="reactionBadge">active</div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 Beatrice bc 🚀</div>
+</div>
+
+<script>
+async function refresh(){
+  try{
+    const d = await fetch('/api/stats').then(r=>r.json());
+    setText('uptime',    d.uptime||'—');
+    setText('cmds',      d.commandsLoaded||0);
+    setText('threads',   d.threads||0);
+    setText('users',     d.users||0);
+    setText('prefix',    '['+d.prefix+']');
+    setText('botName',   d.botName||'Beatrice bc');
+    setText('uid',       d.uid||'—');
+    setText('nodeVer',   d.nodeVersion||'—');
+    setText('lang',      d.language||'en');
+    setText('ram',       d.ram||'—');
+
+    // baby badge
+    const baby = document.getElementById('babyBadge');
+    if(d.babyActive){ baby.textContent='active'; baby.className='badge on-green'; }
+    else             { baby.textContent='muted';  baby.className='badge off-red'; }
+
+    // delay badge
+    const del = document.getElementById('delayBadge');
+    const rd = d.replyDelay||{};
+    if(rd.enable!==false){ del.textContent=`on ${rd.min||2}-${rd.max||5}s`; del.className='badge on-blue'; }
+    else                  { del.textContent='off'; del.className='badge off-red'; }
+
+    // auto-delete badge
+    const adm = document.getElementById('deleteBadge');
+    const dm = d.deleteOwnMsgs||{};
+    if(dm.enable){ adm.textContent='on'; adm.className='badge on-green'; }
+    else          { adm.textContent='off'; adm.className='badge off-red'; }
+
+    // status
+    const badge = document.getElementById('statusBadge');
+    const txt   = document.getElementById('statusText');
+    if(d.online){ badge.style.borderColor='#166534'; txt.textContent='online'; }
+    else         { badge.style.borderColor='#7f1d1d'; txt.textContent='offline'; }
+
+  }catch(e){ console.error(e); }
+}
+function setText(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
+refresh();
+setInterval(refresh,2000);
+</script>
+</body>
+</html>

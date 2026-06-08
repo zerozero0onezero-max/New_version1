@@ -1,0 +1,202 @@
+{
+  "facebookAccount": {
+    "email": "",
+    "password": "",
+    "2FASecret": "",
+    "i_user": "",
+    "proxy": null,
+    "userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36",
+    "intervalGetNewCookie": 1440,
+    "notes": "time the system automatically retrieves new cookies from email/password, unit is minute, if you set null, the system will not automatically retrieve new cookies, it saves you from having to manually change your cookie every time it expires. recommended set to 1440 (1day) or 4320 (3day).TO BE ABLE TO USE THIS FEATURE YOU NEED TO ENTER THE ACCOUNT PASSWORD ABOVE"
+  },
+  "port": 3000,
+  "antiInbox": false,
+  "checkApproval": true,
+  "language": "en",
+  "notesLanguage": "change to your language with ISO 639-1 code, available languages: vi (Vietnamese), en (English)",
+  "nickNameBot": "✨ Beatrice bc ✨",
+  "botName": "Beatrice bc",
+  "botNameNotes": "This is the bot display name used inside text messages sent to groups. Change this single value to rename the bot everywhere in chat output without touching the code.",
+  "replyDelay": {
+    "enable": true,
+    "min": 2,
+    "max": 5,
+    "notes": "Random human-like delay before the bot replies. Values are SECONDS. The 'typing...' indicator is shown for the same duration. min = floor (will never reply faster than this). max = ceiling (will never take longer than this). Set enable=false to reply instantly."
+  },
+  "deleteOwnMessages": {
+    "enable": false,
+    "min": 30,
+    "max": 60,
+    "notes": "When enable=true the bot deletes (unsends) its OWN messages after a random delay between min and max SECONDS. When enable=false the bot keeps its messages forever. Same idea as the typing timer."
+  },
+  "babyDeveloperId": "100069977482239",
+  "babyDeveloperIdNotes": "Facebook user ID of the baby/beatrice developer. Only this user can run 'stfu' / 'stfu off'. When stfu is ON, baby.js (the AI persona) ignores everyone except this ID; all other bot commands keep working normally.",
+  "prefix": ".",
+  "allowAdminNoPrefix": true,
+  "adminOnly": {
+    "enable": false,
+    "ignoreCommand": []
+  },
+  "creatorOnly": {
+    "enable": false,
+    "ignoreCommand": []
+  },
+  "premiumOnly": {
+    "enable": false,
+    "ignoreCommand": [
+      "account"
+    ]
+  },
+  "autogit": {
+    "enable": false,
+    "GITHUB_TOKEN": "you_github_token",
+    "owner": "your_githb_username",
+    "repo": "your_fork_name",
+    "branch": "main",
+    "interval": 60,
+    "notes": "github bot running use false..... [ render, vercel, railway, cyclic heruku, koyeb ] bot running use true...interval is 60 = 1minute auto GitHub push"
+  },
+  "logsbot": [
+    "100069977482239"
+  ],
+  "adminBot": [
+    "100069977482239"
+  ],
+  "creator": [
+    "100069977482239"
+  ],
+  "reactBy": {
+    "delete": [
+      "😡",
+      "🤬",
+      "😾",
+      "😠"
+    ],
+    "kick": [
+      "🦶",
+      "👟",
+      "🥿"
+    ]
+  },
+  "whiteListMode": {
+    "enable": false,
+    "whiteListIds": [
+      ""
+    ],
+    "notes": "if you enable this feature, only the ids in the whiteListIds list can use the bot"
+  },
+  "whiteListModeThread": {
+    "enable": false,
+    "whiteListThreadIds": [
+      ""
+    ],
+    "notes": "if you enable this feature, only the thread in the whiteListThreadIds list can use the bot",
+    "how_it_work": "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
+  },
+  "database": {
+    "type": "sqlite",
+    "uriMongodb": "",
+    "autoSyncWhenStart": false,
+    "autoRefreshThreadInfoFirstTime": false,
+    "notes": "(1) type selects 'json' or 'sqlite' or 'mongodb'. If you choose mongodb, enter uri connect mongodb in the uriMongodb section, instructions to get uri connect mongodb at: https://youtu.be/z1f9urHW5xY. I recommend using 'mongodb' or 'sqlite', json is not recommended because it is not stable. (2) when you set autoSyncWhenStart to true, the bot will automatically synchronize the data in the database when starting the bot, this will make the bot start slower. (3) when you set autoRefreshThreadInfoFirstTime to true, the bot will automatically refresh the thread information when get first message from the thread since starting the bot"
+  },
+  "timeZone": "Asia/Dhaka",
+  "dashBoard": {
+    "enable": true,
+    "expireVerifyCode": 300000,
+    "port": 5000
+  },
+  "serverUptime": {
+    "enable": false,
+    "port": 3001,
+    "socket": {
+      "enable": true,
+      "channelName": "uptime",
+      "verifyToken": ""
+    }
+  },
+  "autoRestart": {
+    "time": null,
+    "notes": "you can set time is interval with milisecond or cron time, example: 1000, 10000, 60000, 3600000, 86400000, 0 0 * * *,... docs: https://www.npmjs.com/package/node-cron. If you set time is 0 or false or null, the bot will not auto restart"
+  },
+  "autoUptime": {
+    "enable": false,
+    "timeInterval": 180,
+    "url": "",
+    "notes": "the value of timeInterval is seconds, url is the url you want to send the request to (automatically detected for hosting glitch or replit)"
+  },
+  "autoLoadScripts": {
+    "enable": false,
+    "ignoreCmds": "",
+    "ignoreEvents": "",
+    "notes": "this feature will automatically load the script when scripts have been changed, you can set ignoreCmds to ignore commands, ignoreEvents to ignore events, separate by comma or space, example: \"cmd1.js cmd2.js cmd3.js\" (without backslash)"
+  },
+  "autoRefreshFbstate": true,
+  "autoReloginWhenChangeAccount": true,
+  "autoRestartWhenListenMqttError": false,
+  "restartListenMqtt": {
+    "enable": true,
+    "timeRestart": 1800000,
+    "delayAfterStopListening": 2000,
+    "logNoti": true,
+    "notes": "the value of timeRestart and delayAfterStopListening is milisecond, You shouldn't edit this if you don't know what it is"
+  },
+  "notiWhenListenMqttError": {
+    "notes": "This is the message when the bot is listening to the mqtt server and the mqtt server stops working due to account problems such as: locked acc, blocked due to spam,... bot will automatically send notifications to parts of your settings. You must change enable to true to use this feature. See bot/login/handlerWhenListenHasError.js file for details on how it works",
+    "gmail": {
+      "enable": false,
+      "emailGetNoti": "",
+      "note": "Bot will use gmailAccount to send email to emailGetNoti, can send notifications to many email, separate by comma or space, example: \"example1@gmail.com example2@gmail.com\" (without backslash)"
+    },
+    "telegram": {
+      "enable": false,
+      "botToken": "",
+      "chatId": "",
+      "note": "Can send notifications to many chatId, separate by comma or space, example: \"123456789 987654321\" (without backslash)"
+    },
+    "discordHook": {
+      "enable": false,
+      "webhookUrl": "",
+      "note": "Can send notifications to many webhookUrl, separate by comma or space, example: \"https://discord.com/api/webhooks/123456789/123456789 https://discord.com/api/webhooks/987654321/987654321\" (without backslash)"
+    }
+  },
+  "hideNotiMessage": {
+    "commandNotFound": false,
+    "adminOnly": false,
+    "threadBanned": false,
+    "userBanned": false,
+    "needRoleToUseCmd": false,
+    "needRoleToUseCmdOnReply": false,
+    "needRoleToUseCmdOnReaction": false
+  },
+  "logEvents": {
+    "disableAll": false,
+    "message": true,
+    "message_reaction": true,
+    "message_unsend": true,
+    "message_reply": true,
+    "event": true,
+    "read_receipt": false,
+    "typ": false,
+    "presence": false
+  },
+  "optionsFca": {
+    "forceLogin": true,
+    "listenEvents": true,
+    "updatePresence": true,
+    "listenTyping": true,
+    "logLevel": "error",
+    "selfListen": false,
+    "selfListenEvent": true,
+    "autoMarkDelivery": true,
+    "autoReconnect": false,
+    "notes": "Document here: https://github.com/ntkhang03/fb-chat-api/blob/master/DOCS.md#apisetoptionsoptions "
+  },
+  "apiKeys": {
+    "huggingFace": "",
+    "blackboxAI": "",
+    "pawanKrd": "",
+    "_notes": "Add your API keys here. huggingFace: get free token at hf.co/settings/tokens. blackboxAI: api.blackbox.ai. pawanKrd: api.pawan.krd. These are read by utils/aiClient.js and utils/perception.js so the bot works on any hosting without environment variables."
+  },
+  "geminiKeysNotes": "Gemini API keys are managed dynamically via .keyadd / .keydel / .keylist commands (stored in data/gemini-keys.json). You do not need to add them manually here. Get free keys at: https://aistudio.google.com/app/apikey"
+}
