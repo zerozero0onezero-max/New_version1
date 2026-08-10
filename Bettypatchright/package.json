@@ -1,0 +1,20 @@
+{
+  "name": "bettypatchright",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portable Patchright runtime for the Beatrice Bot browser testing service.",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "check": "node environment-check.mjs",
+    "repair": "node environment-check.mjs --repair",
+    "prepare-ui": "node prepare-ui.mjs",
+    "build": "node prepare-ui.mjs",
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "patchright": "1.61.1"
+  }
+}

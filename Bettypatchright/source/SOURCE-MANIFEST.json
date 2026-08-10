@@ -1,0 +1,6 @@
+{
+  "product": "Beatrice Bot",
+  "sourceOfTruth": "Bettypatchright/source",
+  "runtimeBuild": "Bettypatchright/ui",
+  "note": "node_modules and the Patchright browser cache are intentionally excluded."
+}

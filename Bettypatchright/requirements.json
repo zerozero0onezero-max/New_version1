@@ -1,0 +1,91 @@
+{
+  "name": "Bettypatchright",
+  "version": "1.1.0",
+  "runtime": {
+    "language": "Node.js",
+    "node": ">=18.0.0",
+    "packageManager": "npm or pnpm"
+  },
+  "tools": [
+    {
+      "name": "npm",
+      "command": "npm",
+      "versionArgs": [
+        "--version"
+      ],
+      "required": true
+    },
+    {
+      "name": "pnpm",
+      "command": "pnpm",
+      "versionArgs": [
+        "--version"
+      ],
+      "required": false
+    }
+  ],
+  "dependencies": {
+    "patchright": "1.61.1"
+  },
+  "bundledUi": {
+    "entry": "ui/index.html",
+    "source": "../artifacts/beatrice-bot",
+    "runtimeDependencies": {
+      "react": "19.1.0",
+      "react-dom": "19.1.0",
+      "lucide-react": "0.545.0"
+    },
+    "buildDependencies": {
+      "@vitejs/plugin-react": "5.1.4",
+      "typescript": "5.9.3",
+      "vite": "7.3.2"
+    }
+  },
+  "browser": {
+    "engine": "chromium",
+    "install": "after-server-start",
+    "command": "patchright install chromium",
+    "cache": "Patchright cache outside the project"
+  },
+  "requiredFiles": [
+    "package.json",
+    "requirements.json",
+    "environment-check.mjs",
+    "browser-runtime.mjs",
+    "server.mjs",
+    "ui/index.html",
+    "source/index.html",
+    "source/package.json",
+    "source/vite.config.ts",
+    "source/vite-plugin-beatrice-api.ts",
+    "source/src/App.tsx",
+    "source/src/main.tsx",
+    "source/src/index.css"
+  ],
+  "systemLibraries": [
+    "glib",
+    "libgbm",
+    "alsa-lib",
+    "nss",
+    "nspr",
+    "libdrm",
+    "cairo",
+    "pango",
+    "freetype",
+    "fontconfig",
+    "dbus",
+    "cups",
+    "at-spi2-atk",
+    "atk",
+    "expat",
+    "systemd",
+    "xorg.libX11",
+    "xorg.libxcb",
+    "xorg.libXcomposite",
+    "xorg.libXdamage",
+    "xorg.libXext",
+    "xorg.libXfixes",
+    "xorg.libXrandr",
+    "libxkbcommon"
+  ]
+}

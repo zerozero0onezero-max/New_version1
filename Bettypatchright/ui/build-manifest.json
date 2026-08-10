@@ -1,0 +1,6 @@
+{
+  "product": "Beatrice Bot",
+  "builtFrom": "artifacts/beatrice-bot",
+  "servedBy": "Bettypatchright/server.mjs",
+  "note": "The browser binary is intentionally not bundled. It is installed after the server starts."
+}
