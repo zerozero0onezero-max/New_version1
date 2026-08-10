@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Beatrice Bot"
+description = "لوحة عربية لاختبار واجهات المواقع المملوكة أو المصرح باختبارها عبر متصفح Patchright، مع حفظ الجلسات، تحليل العناصر، اللقطات، أوضاع العرض، والقياسات الحية."
+version = "1.0.0"
+id = "artifacts/beatrice-bot"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25890
+
+[services.development]
+run = "pnpm --filter @workspace/beatrice-bot run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/beatrice-bot", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/beatrice-bot/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25890"
+BASE_PATH = "/"

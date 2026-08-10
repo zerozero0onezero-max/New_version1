@@ -1,0 +1,1 @@
+- [Patchright runtime](patchright-runtime.md) — Chromium يحتاج تبعيات النظام في بيئة Nix، ولقطات Patchright يجب تحويلها إلى Base64 قبل إرجاع JSON.
