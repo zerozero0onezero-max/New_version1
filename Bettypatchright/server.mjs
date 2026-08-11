@@ -5,6 +5,9 @@ import { extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkEnvironment, formatEnvironmentReport, installMissingDependencies } from './environment-check.mjs';
 import { loadChromium, ensureChromiumInstalled } from './browser-runtime.mjs';
+import { contextOptions, isBrowserMode } from './browser-profile.mjs';
+import { persistSiteCookies, restoreSiteCookies } from './cookie-store.mjs';
+import { normalizeTargetUrl } from './url-utils.mjs';
 
 const root = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const port = Number(process.env.PORT || 7860);
@@ -38,10 +41,10 @@ function stats() {
   };
 }
 
-function contextOptions(nextMode) {
-  if (nextMode === 'desktop') return { viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2, isMobile: false, hasTouch: false };
-  if (nextMode === 'tablet') return { viewport: { width: 768, height: 1024 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
-  return { viewport: { width: 384, height: 832 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
+async function saveCookies() {
+  if (context && page && /^https?:\/\//i.test(page.url())) {
+    await persistSiteCookies(context, page.url());
+  }
 }
 
 async function openBrowser() {
@@ -98,9 +101,13 @@ async function api(req, res, pathname) {
   if (pathname === '/api/navigate') {
     const data = await jsonBody(req);
     if (!(await openBrowser())) return send(res, 503, { error: browserError, ...stats() });
-    if (!/^https?:\/\//i.test(String(data.url || ''))) return send(res, 400, { error: 'Only http and https URLs are supported' });
-    await page.goto(String(data.url), { waitUntil: 'domcontentloaded', timeout: 45000 });
+    const target = normalizeTargetUrl(data.url);
+    await saveCookies();
+    await context.clearCookies();
+    await restoreSiteCookies(context, target);
+    await page.goto(target, { waitUntil: 'domcontentloaded', timeout: 45000 });
     lastUrl = page.url();
+    await saveCookies();
     return send(res, 200, { success: true, screenshot: await screenshot(), ...(await analyze()) });
   }
   if (!page) return send(res, 503, { error: 'Patchright browser is not connected', ...stats() });
@@ -110,12 +117,16 @@ async function api(req, res, pathname) {
   else if (pathname === '/api/coordinate-click') { await page.mouse.click(Number(data.x), Number(data.y)); if (data.text) await page.keyboard.type(String(data.text)); }
   else if (pathname === '/api/scroll') await page.mouse.wheel(Number(data.x || 0), Number(data.y || 0));
   else if (pathname === '/api/mode') {
-    if (!['desktop', 'tablet', 'mobile'].includes(data.mode)) return send(res, 400, { error: 'Invalid mode' });
+    if (!isBrowserMode(data.mode)) return send(res, 400, { error: 'Invalid mode' });
     mode = data.mode;
+    await saveCookies();
+    const currentUrl = page.url();
     await context.close();
     context = await browser.newContext(contextOptions(mode));
     page = await context.newPage();
+    if (/^https?:\/\//i.test(currentUrl)) await restoreSiteCookies(context, currentUrl);
   } else return send(res, 404, { error: 'Not found' });
+  await saveCookies();
   return send(res, 200, { success: true, screenshot: await screenshot(), ...(await analyze()), ...stats() });
 }
 

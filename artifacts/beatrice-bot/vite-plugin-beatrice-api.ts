@@ -4,12 +4,18 @@ import type { Plugin, ViteDevServer } from 'vite';
 import { checkEnvironment, formatEnvironmentReport } from '../../Bettypatchright/environment-check.mjs';
 // @ts-ignore The portable runtime is intentionally shared with the standalone server.
 import { ensureChromiumInstalled } from '../../Bettypatchright/browser-runtime.mjs';
+// @ts-ignore The portable runtime is intentionally shared with the standalone server.
+import { contextOptions, isBrowserMode } from '../../Bettypatchright/browser-profile.mjs';
+// @ts-ignore The portable runtime is intentionally shared with the standalone server.
+import { persistSiteCookies, restoreSiteCookies } from '../../Bettypatchright/cookie-store.mjs';
+// @ts-ignore The portable runtime is intentionally shared with the standalone server.
+import { normalizeTargetUrl } from '../../Bettypatchright/url-utils.mjs';
 
 // Development runs from the workspace artifact; the portable server is strict
 // and only resolves dependencies installed inside Bettypatchright.
 process.env.BETTYPATCHRIGHT_ALLOW_WORKSPACE_DEPS = '1';
 
-type BrowserMode = 'desktop' | 'mobile' | 'tablet';
+type BrowserMode = 'desktop' | 'mobile';
 
 let browser: any = null;
 let context: any = null;
@@ -63,35 +69,10 @@ function launchOptions(proxy?: string) {
   return options;
 }
 
-function contextOptions(nextMode: BrowserMode) {
-  if (nextMode === 'desktop') {
-    return {
-      viewport: { width: 1280, height: 800 },
-      deviceScaleFactor: 2,
-      isMobile: false,
-      hasTouch: false,
-      userAgent:
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    };
+async function saveCookies() {
+  if (context && page && /^https?:\/\//i.test(page.url())) {
+    await persistSiteCookies(context, page.url());
   }
-  if (nextMode === 'tablet') {
-    return {
-      viewport: { width: 768, height: 1024 },
-      deviceScaleFactor: 2,
-      isMobile: true,
-      hasTouch: true,
-      userAgent:
-        'Mozilla/5.0 (Linux; Android 14; Tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
-    };
-  }
-  return {
-    viewport: { width: 384, height: 832 },
-    deviceScaleFactor: 3,
-    isMobile: true,
-    hasTouch: true,
-    userAgent:
-      'Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36',
-  };
 }
 
 async function ensureBrowser(proxy?: string) {
@@ -205,6 +186,7 @@ async function browserStats() {
     patchrightState,
     patchrightError: patchrightState === 'missing' ? patchrightError : '',
     mode,
+    profile: contextOptions(mode),
     url: lastUrl,
   };
 }
@@ -234,22 +216,27 @@ async function handle(req: any, res: any) {
   if (path === '/api/navigate' && req.method === 'POST') {
     const data = await body(req);
     if (!page && !(await ensureBrowser(data.proxy))) return json(res, 503, { error: 'Patchright is not installed or unavailable on this host', ...(await browserStats()) });
-    const target = String(data.url || '').trim();
-    if (!/^https?:\/\//i.test(target)) return json(res, 400, { error: 'Only http and https URLs are supported' });
+    const target = normalizeTargetUrl(data.url);
+    await saveCookies();
+    await context.clearCookies();
+    await restoreSiteCookies(context, target);
     await page.goto(target, { waitUntil: 'domcontentloaded', timeout: 45000 });
     lastUrl = page.url();
+    await saveCookies();
     return json(res, 200, { success: true, screenshot: await screenshot(), ...(await analyze()) });
   }
   if (path === '/api/click' && req.method === 'POST') {
     const data = await body(req);
     if (!page) return json(res, 503, { error: 'Patchright is not connected' });
     await page.locator(String(data.selector)).click({ timeout: 10000 });
+    await saveCookies();
     return json(res, 200, { success: true, screenshot: await screenshot(), ...(await analyze()) });
   }
   if (path === '/api/fill' && req.method === 'POST') {
     const data = await body(req);
     if (!page) return json(res, 503, { error: 'Patchright is not connected' });
     await page.locator(String(data.selector)).fill(String(data.value || ''), { timeout: 10000 });
+    await saveCookies();
     return json(res, 200, { success: true, screenshot: await screenshot() });
   }
   if (path === '/api/coordinate-click' && req.method === 'POST') {
@@ -257,6 +244,7 @@ async function handle(req: any, res: any) {
     if (!page) return json(res, 503, { error: 'Patchright is not connected' });
     await page.mouse.click(Number(data.x), Number(data.y));
     if (data.text) await page.keyboard.type(String(data.text));
+    await saveCookies();
     return json(res, 200, { success: true, screenshot: await screenshot() });
   }
   if (path === '/api/scroll' && req.method === 'POST') {
@@ -270,15 +258,18 @@ async function handle(req: any, res: any) {
   if (path === '/api/mode' && req.method === 'POST') {
     const data = await body(req);
     const nextMode = data.mode as BrowserMode;
-    if (!['desktop', 'mobile', 'tablet'].includes(nextMode)) return json(res, 400, { error: 'Invalid mode' });
+    if (!isBrowserMode(nextMode)) return json(res, 400, { error: 'Invalid mode' });
     mode = nextMode;
     if (context && page) {
+      await saveCookies();
+      const currentUrl = page.url();
       await context.close().catch(() => undefined);
       context = await browser.newContext(contextOptions(mode));
       page = await context.newPage();
       attachPageBehavior(page);
+      if (/^https?:\/\//i.test(currentUrl)) await restoreSiteCookies(context, currentUrl);
     }
-      return json(res, 200, { success: true, screenshot: await screenshot(), ...(await browserStats()) });
+    return json(res, 200, { success: true, screenshot: await screenshot(), ...(await browserStats()) });
   }
   return json(res, 404, { error: 'Not found' });
 }
