@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "clsx": "^2.1.1",
     "patchright": "^1.61.1",
     "prettier": "^3.8.1",
+    "tailwind-merge": "^3.6.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
